@@ -1,6 +1,5 @@
 package test;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import org.openqa.selenium.By;
