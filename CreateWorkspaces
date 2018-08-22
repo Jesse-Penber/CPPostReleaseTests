@@ -6,17 +6,18 @@ import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class CreateWorkspace820 { 
+public class WorkspaceCreationTests { 
 	
 	WebDriver driver;
 	
-		private static Date date = new Date();
+		public static Date date = new Date();
 		
 		public void switchToNewTab() {
 			ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
@@ -30,36 +31,43 @@ public class CreateWorkspace820 {
 			driver = new ChromeDriver();
 		}
 		
-		@Test
+		@Test(priority=0)
 		// navigate to Daptiv US and log in 
 		public void login() {
 			driver.navigate().to("https://login.daptiv.com");
 			driver.findElement(By.cssSelector("#email")).sendKeys("jsample@email.com");
-			driver.findElement(By.cssSelector("#password")).sendKeys("########");
+			driver.findElement(By.cssSelector("#password")).sendKeys("Password1$");
 			driver.findElement(By.cssSelector("#login-btn")).click();
 		}
 		
-		@Test(dependsOnMethods="login")
+		@Test(priority=1, dependsOnMethods="login")
 		//create workspace using Projects tab Create Workspace
 		public void createWorkspaceDirect() {
 			driver.findElement(By.linkText("Projects")).click();
 			driver.findElement(By.linkText("Create Workspace")).click();
-			driver.findElement(By.cssSelector("#wiz__workspaceName")).sendKeys("Test Workspace " + date);
+			driver.findElement(By.cssSelector("#wiz__workspaceName")).sendKeys("Workspace Direct " + date);
 			driver.findElement(By.cssSelector("#wiz_btnFinish1")).click();
 		}
 		
-		@Test(dependsOnMethods="createWorkspaceDirect")
+		@Test(priority=2, dependsOnMethods="createWorkspaceDirect")
+		//
+		public void verifyWorkspaceCreationDirect() {
+			String pageText = driver.findElement(By.tagName("body")).getText();
+			Assert.assertTrue(pageText.contains("Workspace Direct " + date));
+		}
+		
+		@Test(priority=3, dependsOnMethods="login")
 		//create template
 		public void createTemplate() {
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			driver.findElement(By.xpath("//div[@class='icon settings js-settings-icon']")).click();
 			driver.findElement(By.linkText("Generate Template")).click();
 			driver.switchTo().window("IB_BASIC");
-			driver.findElement(By.xpath("//input[@class='itembrowser-input-text js-title']")).sendKeys(date + " Template");
+			driver.findElement(By.xpath("//input[@class='itembrowser-input-text js-title']")).sendKeys("Template " + date);
 			driver.findElement(By.name("ivButtonBar$ctl00")).click();
 		}
 		
-		@Test(dependsOnMethods="createTemplate") 
+		@Test(priority=4, dependsOnMethods="createTemplate") 
 		//verify template creation success message is displayed
 			public void createTemplateSuccessMessage() {
 			driver.switchTo().window("");
@@ -67,31 +75,47 @@ public class CreateWorkspace820 {
 			Assert.assertTrue(pageText.contains("New Template Saved"));
 		}
 		
-		@Test(dependsOnMethods="createTemplate")
-		//create workspace from template, NOT DONE
+		@Test(priority=5, dependsOnMethods="createTemplate")
+		//create workspace from template
 		public void createWorkspaceFromTemplate() {
 			driver.switchTo().window("");
 			driver.findElement(By.linkText("Templates")).click();
-			driver.findElement(By.linkText(date + " Template")).click();
-			driver.findElement(By.cssSelector("#wiz__workspaceName")).sendKeys(date + " Workspace from Template");
-			driver.findElement(By.cssSelector("#wiz_btnFinish1")).click();
+			driver.findElement(By.xpath("//img[@border='0']")).click();
+			driver.findElement(By.linkText("Create Workspace from Template")).click();
+			driver.findElement(By.xpath("//input[@name='wiz$_workspaceName']")).sendKeys("Workspace from Template " + date);
+			driver.findElement(By.xpath("//input[@type='submit']")).click();
 		}
 		
-		@Test(dependsOnMethods="login")
-		//create workspace from admin zone, NOT DONE
+		@Test(priority=6, dependsOnMethods="createWorkspaceFromTemplate")
+		//verify creation of workspace from template
+		public void  verifyWorkspaceCreationTemplate() {
+			String pageText = driver.findElement(By.tagName("body")).getText();
+			Assert.assertTrue(pageText.contains("Workspace from Template " + date));
+		}
+		
+		@Test(priority=7, dependsOnMethods="login")
+		//create workspace from admin zone
 		public void createWorkspaceinAdminZone() {
 			driver.findElement(By.xpath("//span[@class='icon user']")).click();
 			driver.findElement(By.linkText("Admin")).click();
 			switchToNewTab();
 			driver.findElement(By.xpath("//div[@class='nav-button nav-button-projects']")).click();
 			driver.findElement(By.linkText("Create Workspace")).click();
-			driver.findElement(By.cssSelector("#wiz$_workspaceName")).sendKeys(date + " Workspace from Admin Zone");
-			driver.findElement(By.cssSelector("#wiz_btnFinish1")).click();
+			driver.findElement(By.name("wiz$_workspaceName")).sendKeys("Workspace from Admin Zone " + date);
+			driver.findElement(By.name("wiz$btnFinish1")).click();
+		}
+		
+		@Test(priority=8, dependsOnMethods="createWorkspaceinAdminZone")
+		//verify creation of workspace in admin zone
+		public void verifyWorkspaceCreationAdminZone() {
+			driver.findElement(By.xpath("//div[@class='nav-hotbutton nav-hotbutton-projects']")).click();
+			WebElement workspaceCreatedName = driver.findElement(By.linkText("Workspace from Admin Zone " + date));
+			Assert.assertEquals(true, workspaceCreatedName.isDisplayed());
 		}
 		
 		@AfterClass
 		public void closeApp() {
-		//driver.quit();
+		driver.quit();
 	}
 
 }
