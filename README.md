@@ -1,4 +1,4 @@
-# DaptivPostReleaseTests
+# CPPostReleaseTests
 Post-release user tests in Selenium
 
 8-22-2018: Wrote adding, editing, and removing user scenarios. 
