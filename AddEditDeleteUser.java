@@ -33,7 +33,7 @@ public class AddEditDeleteUser {
 	public void login() {
 		driver.navigate().to("https://login.daptiv.com");
 		driver.findElement(By.cssSelector("#email")).sendKeys("jsample@email.com");
-		driver.findElement(By.cssSelector("#password")).sendKeys("Password1$");
+		driver.findElement(By.cssSelector("#password")).sendKeys("########");
 		driver.findElement(By.cssSelector("#login-btn")).click();
 	}
 	
