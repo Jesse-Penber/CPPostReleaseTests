@@ -1,6 +1,8 @@
 # CPPostReleaseTests
 Post-release user tests in Selenium
 
+9-11-2018: Finished creating and deleting request and request type suite.
+
 8-24-2018: Wrote creating request type and request type approval policy scenarios. 
 
 8-22-2018: Wrote adding, editing, and removing user scenarios. 
