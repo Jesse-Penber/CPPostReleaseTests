@@ -11,4 +11,4 @@ Post-release user tests in Selenium
 
 8-20-2018: Wrote creating workspace by template, creating template, and creating workspace from admin zone scenarios. Updated workspace and template titles to include creation date and time. 
 
-Next suites to write: Workspace Requests (creating requests directly and by HTML form)
+Next suites to write: Edit User Settings
