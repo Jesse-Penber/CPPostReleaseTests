@@ -1,7 +1,7 @@
 # CPPostReleaseTests
 Post-release user tests in Selenium
 
-9-14-2018: Updated Workspaces suite to include deleting workspace. Add Change User Settings utility suite.
+9-14-2018: Updated Workspaces suite to include deleting workspace. Added Change User Settings utility suite.
 
 9-11-2018: Finished creating and deleting request and request type suite.
 
